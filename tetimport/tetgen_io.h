@@ -21,6 +21,7 @@
 #include <vector>
 #include <deque>
 #include <ctime>
+#include <iterator>
 
 #include "Math.h"
 
@@ -109,7 +110,7 @@ void tetrahedra_mesh::load_tet_ele(std::string filename)
 		myfile.close();
 	}
 	else std::cout << "Unable to open .ele file";
-	fprintf_s(stderr, "Total number of tetrahedra in .ele-file: %u \n", num);
+	fprintf(stderr, "Total number of tetrahedra in .ele-file: %u \n", num);
 }
 
 
@@ -137,7 +138,7 @@ void tetrahedra_mesh::load_tet_neigh(std::string filename)
 		myfile.close();
 	}
 	else std::cout << "Unable to open .neigh file";
-	fprintf_s(stderr, "Total number of tetrahedra in .neigh-file: %u \n", num);
+	fprintf(stderr, "Total number of tetrahedra in .neigh-file: %u \n", num);
 }
 
 
@@ -172,7 +173,7 @@ void tetrahedra_mesh::load_tet_node(std::string filename)
 		myfile.close();
 	}
 	else std::cout << "Unable to open .node file";
-	fprintf_s(stderr, "Total number of Nodes in .node-file: %u \n", num);
+	fprintf(stderr, "Total number of Nodes in .node-file: %u \n", num);
 }
 
 
@@ -211,7 +212,7 @@ void tetrahedra_mesh::load_tet_face(std::string filename)
 		myfile.close();
 	}
 	else std::cout << "Unable to open .face file";
-	fprintf_s(stderr, "Total number of Faces in .face-file: %u \n", num);
+	fprintf(stderr, "Total number of Faces in .face-file: %u \n", num);
 }
 
 
@@ -245,7 +246,7 @@ void tetrahedra_mesh::load_tet_edge(std::string filename)
 		myfile.close();
 	}
 	else std::cout << "Unable to open .edge file";
-	fprintf_s(stderr, "Total number of Edges in .edge-file: %u \n", num);
+	fprintf(stderr, "Total number of Edges in .edge-file: %u \n", num);
 }
 
 
@@ -274,7 +275,7 @@ void tetrahedra_mesh::load_tet_t2f(std::string filename)
 		myfile.close();
 	}
 	else std::cout << "Unable to open .t2f file";
-	fprintf_s(stderr, "Total number of Tetrahedra in .t2f-file: %u \n", num);
+	fprintf(stderr, "Total number of Tetrahedra in .t2f-file: %u \n", num);
 }
 
 //--------------------------------------------------------------------------------------------------------------------------------------

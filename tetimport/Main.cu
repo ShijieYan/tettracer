@@ -18,7 +18,7 @@
 #include "tetgen_io.h"
 #include "Camera.h"
 #include "device_launch_parameters.h"
-#include "GLFW/glfw3.h"
+#include <GLFW/glfw3.h>
 #include <cuda_gl_interop.h>
 #include <curand.h>
 #include <curand_kernel.h>
@@ -249,7 +249,7 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 	}
 }
 
-__device__ RGB radiance(mesh2 *mesh, int32_t start, Ray &ray, float4 oldpos, curandState* randState)
+__device__ RGB radiance(mesh2 *mesh, int32_t start, Ray const &ray, float4 oldpos, curandState* randState)
 {
 	float4 mask = make_float4(1.0f, 1.0f, 1.0f, 1.0f);	// colour mask (accumulated reflectance)
 	float4 accucolor = make_float4(0.0f, 0.0f, 0.0f, 0.0f);	// accumulated colour
@@ -292,7 +292,9 @@ __device__ RGB radiance(mesh2 *mesh, int32_t start, Ray &ray, float4 oldpos, cur
 		f = make_float4(1.0f, 1.0f, 1.0f, 0.0f);
 		firsthit.refl_t = REFR;
 		x = originInWorldSpace + rayInWorldSpace * sphereDist;
-		n= normalize((x - spherePos));
+		//n= normalize((x - spherePos));
+		n=x-spherePos;
+		n=normalize(n);
 		nl = Dot(n, rayInWorldSpace) < 0 ? n : n * -1;
 		}
 
@@ -525,7 +527,8 @@ __global__ void renderKernel(mesh2 *tetmesh, int32_t start, float3 *accumbuffer,
 void render()
 {
 	GLFWwindow* window;
-	if (!glfwInit()) exit(EXIT_FAILURE);
+	if (!glfwInit()) 
+	    throw(__LINE__);
 	window = glfwCreateWindow(width, height, "", NULL, NULL);
 	glfwMakeContextCurrent(window);
 	glfwSetErrorCallback(error_callback);
@@ -710,8 +713,8 @@ int main(int argc, char *argv[])
 
 	// Get bounding box
 	box = init_BBox(mesh);
-	fprintf_s(stderr, "\nBounding box:MIN xyz - %f %f %f \n", box.min.x, box.min.y, box.min.z);
-	fprintf_s(stderr, "             MAX xyz - %f %f %f \n\n", box.max.x, box.max.y, box.max.z);
+	fprintf(stderr, "\nBounding box:MIN xyz - %f %f %f \n", box.min.x, box.min.y, box.min.z);
+	fprintf(stderr, "             MAX xyz - %f %f %f \n\n", box.max.x, box.max.y, box.max.z);
 
 	// Allocate unified memory
 	gpuErrchk(cudaMallocManaged(&finalimage, width * height * sizeof(float3)));
@@ -734,7 +737,11 @@ int main(int argc, char *argv[])
 	else fprintf(stderr, "Starting tetrahedra - camera: %lu \n", _start_tet);
 
 	// main render function
-	render();
+	try{
+	    render();
+	}catch(int e){
+	    fprintf(stderr,"error thrown from line# %d\n", e);
+	}
 
 	gpuErrchk(cudaDeviceReset());
 	glfwTerminate();

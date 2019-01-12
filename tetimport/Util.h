@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <string>
 #include "stb_truetype.h"
-#include "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.5\extras\CUPTI\include\GL\glew.h"
+#include <GL/glew.h>
 
 unsigned char ttf_buffer[1<<20];
 unsigned char temp_bitmap[512*512];
