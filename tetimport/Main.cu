@@ -558,7 +558,7 @@ void render()
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	cudaGraphicsResource_t _cgr;
 	size_t num_bytes;
-	cudaGraphicsGLRegisterBuffer(&_cgr, vbo, cudaGraphicsRegisterFlagsNone);
+	gpuErrchk(cudaGraphicsGLRegisterBuffer(&_cgr, vbo, cudaGraphicsRegisterFlagsNone));
 	fprintf(stderr, "VBO created  \n");
 	fprintf(stderr, "Entering glutMainLoop...  \n");
 
@@ -585,8 +585,8 @@ void render()
 		glfwSetWindowTitle(window, title.str().c_str());
 
 		// CUDA interop
-		cudaGraphicsMapResources(1, &_cgr, 0);
-		cudaGraphicsResourceGetMappedPointer((void**)&finalimage, &num_bytes, _cgr);
+		gpuErrchk(cudaGraphicsMapResources(1, &_cgr, 0));
+		gpuErrchk(cudaGraphicsResourceGetMappedPointer((void**)&finalimage, &num_bytes, _cgr));
 		glClear(GL_COLOR_BUFFER_BIT);
 		dim3 block(16, 16, 1);
 		dim3 grid(width / block.x, height / block.y, 1);
@@ -594,7 +594,7 @@ void render()
 			hostRendercam->position, hostRendercam->view, hostRendercam->up, hostRendercam->fov.x, hostRendercam->fov.x,
 			hostRendercam->focalDistance, hostRendercam->apertureRadius);
 		gpuErrchk(cudaDeviceSynchronize());
-		cudaGraphicsUnmapResources(1, &_cgr, 0);
+		gpuErrchk(cudaGraphicsUnmapResources(1, &_cgr, 0));
 
 		glBindBuffer(GL_ARRAY_BUFFER, vbo);
 		glVertexPointer(2, GL_FLOAT, 12, 0);
