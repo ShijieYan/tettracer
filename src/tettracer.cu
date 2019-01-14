@@ -14,7 +14,7 @@
 */
 
 #define GLEW_STATIC
-#include "Util.h"
+#include "tettracer_util.h"
 #include "tetgen_io.h"
 #include "Camera.h"
 #include "device_launch_parameters.h"
